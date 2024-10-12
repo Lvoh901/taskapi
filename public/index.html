@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!--font-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <header class="bg-gray-200 p-2 flex items-center justify-center">
+        <h1 class="text-2xl font-bold uppercase">Task Management App</h1>
+    </header>
+
+    <main class="container mx-auto mt-8 px-4 min-h-screen">
+        <!-- Register Accordion -->
+        <div class="mb-4">
+            <button class="accordion-btn w-full bg-gray-200 text-left p-4 rounded-t-lg font-semibold"
+                onclick="toggleAccordion('register-accordion')">
+                Register
+            </button>
+            <div id="register-accordion" class="accordion-content hidden bg-white p-4 rounded-b-lg shadow">
+                <form id="register-form">
+                    <input type="text" id="username" placeholder="Username" required
+                        class="w-full p-2 mb-2 border rounded">
+                    <input type="email" id="email" placeholder="Email" required class="w-full p-2 mb-2 border rounded">
+                    <input type="password" id="password" placeholder="Password" required
+                        class="w-full p-2 mb-2 border rounded">
+                    <button type="submit"
+                        class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Register</button>
+                </form>
+                <div id="register-notification" class="mt-2 p-2 rounded hidden"></div>
+            </div>
+        </div>
+
+        <!-- Login Accordion -->
+        <div class="mb-4">
+            <button class="accordion-btn w-full bg-gray-200 text-left p-4 rounded-t-lg font-semibold"
+                onclick="toggleAccordion('login-accordion')">
+                Login
+            </button>
+            <div id="login-accordion" class="accordion-content hidden bg-white p-4 rounded-b-lg shadow">
+                <form id="login-form">
+                    <input type="email" id="login-email" placeholder="Email" required
+                        class="w-full p-2 mb-2 border rounded">
+                    <input type="password" id="login-password" placeholder="Password" required
+                        class="w-full p-2 mb-2 border rounded">
+                    <button type="submit"
+                        class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">Login</button>
+                </form>
+                <div id="login-notification" class="mt-2 p-2 rounded hidden"></div>
+            </div>
+        </div>
+
+        <!-- Tasks Accordion -->
+        <div class="mb-4">
+            <button class="accordion-btn w-full bg-gray-200 text-left p-4 rounded-t-lg font-semibold"
+                onclick="toggleAccordion('tasks-accordion')">
+                Tasks
+            </button>
+            <div id="tasks-accordion" class="accordion-content hidden bg-white p-4 rounded-b-lg shadow">
+                <form id="add-task-form" class="mb-4">
+                    <input type="text" id="task-title" placeholder="Task Title" required
+                        class="w-full p-2 mb-2 border rounded">
+                    <textarea id="task-description" placeholder="Task Description" required
+                        class="w-full p-2 mb-2 border rounded"></textarea>
+                    <select id="task-status" required class="w-full p-2 mb-2 border rounded">
+                        <option value="" disabled selected>Select Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <select id="task-priority" required class="w-full p-2 mb-2 border rounded">
+                        <option value="" disabled selected>Select Priority</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add
+                        Task</button>
+                </form>
+                <div id="task-notification" class="mt-2 p-2 rounded hidden"></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="px-4 py-2">Title</th>
+                                <th class="px-4 py-2">Description</th>
+                                <th class="px-4 py-2">Status</th>
+                                <th class="px-4 py-2">Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody id="task-list">
+                            <!-- Task rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Accordion -->
+        <div class="mb-4">
+            <button class="accordion-btn w-full bg-gray-200 text-left p-4 rounded-t-lg font-semibold"
+                onclick="toggleAccordion('projects-accordion')">
+                Projects
+            </button>
+            <div id="projects-accordion" class="accordion-content hidden bg-white p-4 rounded-b-lg shadow">
+                <form id="add-project-form" class="mb-4">
+                    <input type="text" id="project-name" placeholder="Project Name" required
+                        class="w-full p-2 mb-2 border rounded">
+                    <textarea id="project-description" placeholder="Project Description" required
+                        class="w-full p-2 mb-2 border rounded"></textarea>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Add
+                        Project</button>
+                </form>
+                <div id="project-notification" class="mt-2 p-2 rounded hidden"></div>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="px-4 py-2">Name</th>
+                                <th class="px-4 py-2">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="project-list">
+                            <!-- Project rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--admin section-->
+        <section class="container pt-8 px-4">
+            <h1 class="font-bold uppercase underline underline-offset-4 py-5">Admin Functions</h1>
+
+            <!-- Users Accordion -->
+            <div class="mb-4">
+                <button class="accordion-btn w-full bg-gray-200 text-left p-4 rounded-t-lg font-semibold"
+                    onclick="toggleAccordion('users-accordion')">
+                    Users
+                </button>
+                <div id="users-accordion" class="accordion-content hidden bg-white p-4 rounded-b-lg shadow">
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="px-4 py-2">Name</th>
+                                    <th class="px-4 py-2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="user-list">
+                                <!-- User rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Projects Accordion -->
+            <div class="mb-4">
+                <button class="accordion-btn w-full bg-gray-200 text-left p-4 rounded-t-lg font-semibold"
+                    onclick="toggleAccordion('admin-projects-accordion')">
+                    Projects
+                </button>
+
+                <div id="admin-projects-accordion" class="accordion-content hidden bg-white p-4 rounded-b-lg shadow">
+                    <div id="admin-project-notification" class="mt-2 p-2 rounded hidden"></div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="px-4 py-2">Name</th>
+                                    <th class="px-4 py-2">Description</th>
+                                    <th class="px-4 py-2">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-project-list">
+                                <!-- Project rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Tasks Accordion -->
+            <div class="mb-4">
+                <button class="accordion-btn w-full bg-gray-200 text-left p-4 rounded-t-lg font-semibold"
+                    onclick="toggleAccordion('admin-tasks-accordion')">
+                    Tasks
+                </button>
+
+                <div id="admin-tasks-accordion" class="accordion-content hidden bg-white p-4 rounded-b-lg shadow">
+                    <div id="admin-task-notification" class="mt-2 p-2 rounded hidden"></div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="px-4 py-2">Title</th>
+                                    <th class="px-4 py-2">Description</th>
+                                    <th class="px-4 py-2">Status</th>
+                                    <th class="px-4 py-2">Priority</th>
+                                    <th class="px-4 py-2">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-task-list">
+                                <!-- Task rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-200 text-center p-4 mt-8">
+        <p>&copy; 2023 Task Management App</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        function toggleAccordion(id) {
+            const accordions = document.querySelectorAll('.accordion-content');
+            accordions.forEach(accordion => {
+                if (accordion.id === id) {
+                    accordion.classList.toggle('hidden');
+                } else {
+                    accordion.classList.add('hidden');
+                }
+            });
+        }
+
+        function showNotification(id, message, isSuccess) {
+            const notification = document.getElementById(id);
+            notification.textContent = message;
+            notification.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            notification.classList.add(isSuccess ? 'bg-green-100' : 'bg-red-100', isSuccess ? 'text-green-800' :
+                'text-red-800');
+            notification.classList.remove('hidden');
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+
+    <script>
+        // Register function
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                const response = await fetch('http://localhost:5050/api/users/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showNotification('register-notification', 'Registration successful!', true);
+                    // Clear the form fields
+                    document.getElementById('username').value = '';
+                    document.getElementById('email').value = '';
+                    document.getElementById('password').value = '';
+                } else {
+                    showNotification('register-notification', `Registration failed: ${data.message}`,
+                        false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('register-notification', 'An error occurred during registration.', false);
+            }
+        });
+
+        // Login function
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            try {
+                const response = await fetch('http://localhost:5050/api/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showNotification('login-notification', 'Login successful!', true);
+                    localStorage.setItem('token', data.token);
+                    fetchTasks();
+                    fetchProjects();
+                    fetchUserList();
+                    fetchAdminProjectList();
+                    fetchAdminTaskList();
+                } else {
+                    showNotification('login-notification', `Login failed: ${data.message}`, false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('login-notification', 'An error occurred during login.', false);
+            }
+        });
+
+        // Add task function
+        document.getElementById('add-task-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            const status = document.getElementById('task-status').value;
+            const priority = document.getElementById('task-priority').value;
+            try {
+                const response = await fetch('http://localhost:5050/api/tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description,
+                        status,
+                        priority
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showNotification('task-notification', 'Task added successfully!', true);
+                    fetchTasks();
+                    // Clear the form fields
+                    document.getElementById('task-title').value = '';
+                    document.getElementById('task-description').value = '';
+                    document.getElementById('task-status').value = '';
+                    document.getElementById('task-priority').value = '';
+                } else {
+                    showNotification('task-notification', `Failed to add task: ${data.message}`, false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('task-notification', 'An error occurred while adding the task.', false);
+            }
+        });
+
+        // Add project function
+        document.getElementById('add-project-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('project-name').value;
+            const description = document.getElementById('project-description').value;
+            try {
+                const response = await fetch('http://localhost:5050/api/projects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({
+                        name,
+                        description
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showNotification('project-notification', 'Project added successfully!', true);
+                    fetchProjects();
+                } else {
+                    showNotification('project-notification', `Failed to add project: ${data.message}`,
+                        false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('project-notification', 'An error occurred while adding the project.',
+                    false);
+            }
+        });
+
+        // Function to fetch and display tasks
+        async function fetchTasks() {
+            try {
+                const response = await fetch('http://localhost:5050/api/tasks/', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const data = await response.json();
+                const tasks = data.tasks; // Assuming the API returns an object with a 'tasks' property
+                if (!Array.isArray(tasks)) {
+                    console.error('Received data is not an array:', tasks);
+                    return;
+                }
+                const taskList = document.getElementById('task-list');
+                taskList.innerHTML = tasks.map(task => `
+                    <tr>
+                        <td class="border px-4 py-2">${task.title}</td>
+                        <td class="border px-4 py-2">${task.description}</td>
+                        <td class="border px-4 py-2">${task.status}</td>
+                        <td class="border px-4 py-2">${task.priority}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        }
+
+        // Function to fetch and display projects
+        async function fetchProjects() {
+            try {
+                const response = await fetch('http://localhost:5050/api/projects/', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const projects = await response.json();
+                if (!Array.isArray(projects)) {
+                    console.error('Received data is not an array:', projects);
+                    return;
+                }
+                const projectList = document.getElementById('project-list');
+                projectList.innerHTML = projects.map(project => `
+                    <tr>
+                        <td class="border px-4 py-2">${project.name}</td>
+                        <td class="border px-4 py-2">${project.description}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+                if (error.message.includes('SyntaxError')) {
+                    console.error(
+                        'The server returned an invalid JSON response. This might be due to a server error.');
+                }
+            }
+        }
+
+        // Function to fetch and display user list for admin
+        async function fetchUserList() {
+            try {
+                const response = await fetch('http://localhost:5050/api/users/', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const users = await response.json();
+                if (!Array.isArray(users)) {
+                    console.error('Received data is not an array:', users);
+                    return;
+                }
+                const userList = document.getElementById('user-list');
+                userList.innerHTML = users.map(user => `
+                    <tr>
+                        <td class="border px-4 py-2">${user.username}</td>
+                        <td class="border px-4 py-2">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onclick="deleteUser('${user._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+
+        // Function to fetch and display project list for admin
+        async function fetchAdminProjectList() {
+            try {
+                const response = await fetch('http://localhost:5050/api/projects/', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const projects = await response.json();
+                if (!Array.isArray(projects)) {
+                    console.error('Received data is not an array:', projects);
+                    return;
+                }
+                const adminProjectList = document.getElementById('admin-project-list');
+                adminProjectList.innerHTML = projects.map(project => `
+                    <tr>
+                        <td class="border px-4 py-2">${project.name}</td>
+                        <td class="border px-4 py-2">${project.description}</td>
+                        <td class="border px-4 py-2">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mr-2" onclick="editProject('${project._id}')">Edit</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onclick="deleteProject('${project._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching admin projects:', error);
+            }
+        }
+
+        // Function to fetch and display task list for admin
+        async function fetchAdminTaskList() {
+            try {
+                const response = await fetch('http://localhost:5050/api/tasks/', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const tasks = await response.json();
+                if (!Array.isArray(tasks)) {
+                    console.error('Received data is not an array:', tasks);
+                    return;
+                }
+                const adminTaskList = document.getElementById('admin-task-list');
+                adminTaskList.innerHTML = tasks.map(task => `
+                    <tr>
+                        <td class="border px-4 py-2">${task.title}</td>
+                        <td class="border px-4 py-2">${task.description}</td>
+                        <td class="border px-4 py-2">${task.status}</td>
+                        <td class="border px-4 py-2">${task.priority}</td>
+                        <td class="border px-4 py-2">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mr-2" onclick="editTask('${task._id}')">Edit</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600" onclick="deleteTask('${task._id}')">Delete</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching admin tasks:', error);
+            }
+        }
+
+        // Call these functions when the page loads and after successful login
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('token')) {
+                fetchTasks();
+                fetchProjects();
+            }
+        });
+    </script>
+</body>
+
+</html>

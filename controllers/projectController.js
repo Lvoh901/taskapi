@@ -9,14 +9,14 @@ exports.createProject = async (req, res) => {
             name,
             description,
             members,
-            createdBy: req.user.userId, // Assuming auth middleware sets req.user
+            createdBy: req.user.id, // Changed from req.user.userId to req.user.id
         });
 
         const project = await newProject.save();
         res.status(201).json(project);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -24,13 +24,13 @@ exports.createProject = async (req, res) => {
 exports.getProjects = async (req, res) => {
     try {
         const projects = await Project.find()
-            .populate('members', 'username email') // Populate members with username and email
-            .populate('createdBy', 'username email'); // Populate createdBy
+            .populate('members', 'username email')
+            .populate('createdBy', 'username email');
 
         res.json(projects);
     } catch (error) {
         console.error(error.message);
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -42,20 +42,20 @@ exports.getProjectById = async (req, res) => {
             .populate('createdBy', 'username email');
 
         if (!project) {
-            return res.status(404).json({ msg: 'Project not found' });
+            return res.status(404).json({ message: 'Project not found' });
         }
 
         res.json(project);
     } catch (error) {
         console.error(error.message);
         if (error.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Project not found' });
+            return res.status(404).json({ message: 'Project not found' });
         }
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
-// pdate a project by ID
+// update a project by ID
 exports.updateProject = async (req, res) => {
     const { name, description, members } = req.body;
 
@@ -69,7 +69,7 @@ exports.updateProject = async (req, res) => {
         let project = await Project.findById(req.params.id);
 
         if (!project) {
-            return res.status(404).json({ msg: 'Project not found' });
+            return res.status(404).json({ message: 'Project not found' });
         }
 
         project = await Project.findByIdAndUpdate(
@@ -84,9 +84,9 @@ exports.updateProject = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         if (error.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Project not found' });
+            return res.status(404).json({ message: 'Project not found' });
         }
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
 
@@ -96,17 +96,17 @@ exports.deleteProject = async (req, res) => {
         const project = await Project.findById(req.params.id);
 
         if (!project) {
-            return res.status(404).json({ msg: 'Project not found' });
+            return res.status(404).json({ message: 'Project not found' });
         }
 
-        await project.remove();
+        await Project.findByIdAndDelete(req.params.id);
 
-        res.json({ msg: 'Project removed' });
+        res.json({ message: 'Project removed' });
     } catch (error) {
         console.error(error.message);
         if (error.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Project not found' });
+            return res.status(404).json({ message: 'Project not found' });
         }
-        res.status(500).send('Server Error');
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 };
